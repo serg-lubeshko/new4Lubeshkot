@@ -15,7 +15,7 @@ class CheckCourse:
         "Есть ли курс"
         return get_object_or_None(Course, pk=self.course)
 
-    def get_professor(self):
+    def get_professor(self, teacher_user_id):
         """  Проверка профессора добавлении на курс"""
 
         user = get_object_or_None(MyUser, username=self.username)
@@ -25,13 +25,13 @@ class CheckCourse:
         if course is None:
             return "Такого курса нет"
         user_id = user.pk
-        if course.author_id == user_id:
-            return "Сам себя на курс профессор не может добавить"
+        if course.author_id == user_id or user.pk == teacher_user_id:
+            return "На курс профессор не может быть добавлен"
         if TeachCour.objects.filter(course_id=self.course).filter(teacher_id=user_id):
             return "Профессор уже добавлен"
         return None
 
-    def get_student(self, teacher_user_id):
+    def get_student(self, student_user_id):
         """  Проверка профессора студента на курс"""
 
         user_student = get_object_or_None(MyUser, username=self.username)
@@ -43,7 +43,7 @@ class CheckCourse:
         user_id_student = user_student.pk
         if course.author_id == user_id_student:
             return "Сам себя владелец не может добавить"
-        if not TeachCour.objects.filter(course_id=self.course).filter(teacher_id=teacher_user_id):
+        if not TeachCour.objects.filter(course_id=self.course).filter(teacher_id=student_user_id):
             return "Студента может добавить автор либо приглашенный профессор"
         if StudCour.objects.filter(course_id=self.course).filter(student_id=user_id_student):
             return "Студент уже добавлен"

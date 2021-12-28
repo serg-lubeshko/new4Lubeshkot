@@ -1,16 +1,16 @@
 from django.urls import path
 
-
+from course.views.course_view import CourseList, AddStudent, AddTeacher
 
 urlpatterns = [
     #Для удобства Login и Logout использовал Джанговский
     # path('a-create-person/', UserRegister.as_view()),
     # path('a-list-person/', ListPerson.as_view()),
     #
-    # path('b-course-watch-and-add/all', CourseList.as_view()),
+    path('b-course-watch-and-add/all', CourseList.as_view()),
     # path('b-course/detail/<int:pk>', DetailCourse.as_view()),
-    # path('b-course/add-professor/<int:course_id>', AddTeacher.as_view()),
-    # path('b-course/add_del-student/<int:course_id>', AddStudent.as_view()),
+    path('b-course/add-professor/<int:course_id>', AddTeacher.as_view()),
+    path('b-course/add_del-student/<int:course_id>', AddStudent.as_view()),
     #
     # path('bc-lecture-list/', LectureList.as_view()),
     # path('c-lecture-add/<int:course_id>', LectureToCourse.as_view()),

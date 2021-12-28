@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from course.conf.functions_app.Check import CheckCourse
 from course.conf.permission import IsProfessorOrReadOnly, IsOwnerOrReadOnly
 from course.models import Course, TeachCour, StudCour
+from course.serializers.serializers_course import CourseSerializer, CourseDetailSerializer, AddStudentSerializer, \
+    AddTeacherSerializer
 
 MyUser = get_user_model()
 
@@ -72,7 +74,7 @@ class AddTeacher(GenericAPIView):
     #         return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, course_id):
-        check = CheckCourse(course_id, request.data['teacher']).get_professor()
+        check = CheckCourse(course_id, request.data['teacher']).get_professor(request.user.pk)
         if check is None:
             serializer = self.serializer_class(data=request.data)
             teacher_pk = MyUser.objects.filter(username=request.data['teacher'])[0].pk
@@ -98,13 +100,13 @@ class AddStudent(GenericAPIView):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, IsProfessorOrReadOnly]
     serializer_class = AddStudentSerializer
 
-    # def get(self, request, course_id):
-    #     try:
-    #         quer = Course.objects.get(id=course_id)
-    #         serializer = CourseSerializer(quer)
-    #         return Response(serializer.data)
-    #     except Course.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, course_id):
+        try:
+            quer = Course.objects.get(id=course_id)
+            serializer = CourseSerializer(quer)
+            return Response(serializer.data)
+        except Course.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, course_id):
         check = CheckCourse(course_id, request.data['student']).get_student(request.user.pk)
