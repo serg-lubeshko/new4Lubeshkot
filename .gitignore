@@ -4,5 +4,4 @@
 /idea/
 db.sqlite3
 *.idea
-migrations/*
-!migrations/__init__.py
+
