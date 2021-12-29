@@ -6,9 +6,9 @@ from course.serializers.serializers_lecture import LectureSerializer
 
 class HomeworkSerializer(serializers.ModelSerializer):
     professor = serializers.PrimaryKeyRelatedField(read_only=True)
-    lecture_for_homework = serializers.ChoiceField(
-        choices=[i.id for i in Lecture.objects.all()],                #Можно лекции вывессти только свои
-        source='lecture_for_homework_id')
+    # lecture_for_homework = serializers.ChoiceField(
+    #     choices=[i.id for i in Lecture.objects.all()],                #Можно лекции вывессти только свои
+    #     source='lecture_for_homework_id')
 
     class Meta:
         model = Homework

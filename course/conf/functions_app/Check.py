@@ -19,12 +19,15 @@ class CheckCourse:
         """  Проверка профессора добавлении на курс"""
 
         user = get_object_or_None(MyUser, username=self.username)
+
         if user is None or user.status != 'p':
             return "Такой пользователь не может быть добавлен"
         course = self.check_course()
         if course is None:
             return "Такого курса нет"
         user_id = user.pk
+        if not TeachCour.objects.filter(course_id=self.course).filter(teacher_id=teacher_user_id):
+            return "Другого профессора может добавить автор либо приглашенный профессор"
         if course.author_id == user_id or user.pk == teacher_user_id:
             return "На курс профессор не может быть добавлен"
         if TeachCour.objects.filter(course_id=self.course).filter(teacher_id=user_id):

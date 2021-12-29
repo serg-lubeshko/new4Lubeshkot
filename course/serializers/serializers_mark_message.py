@@ -14,7 +14,15 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class MarkSerializer(serializers.ModelSerializer):
-    solution_id = serializers.ChoiceField(choices=[i.id for i in Solution.objects.all()])
+    def __init__(self, *args, **kwargs):
+        super(MarkSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if not request:
+            return
+        self.fields["solution_id"] = serializers.ChoiceField(
+            choices=[i.id for i in Solution.objects.all()])
+
+    # solution_id = serializers.ChoiceField(choices=[i.id for i in Solution.objects.all()])
     mark = serializers.IntegerField(min_value=0, max_value=10)
 
     class Meta:

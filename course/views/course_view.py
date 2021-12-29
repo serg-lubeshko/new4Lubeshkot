@@ -39,8 +39,13 @@ class CourseList(generics.ListCreateAPIView):
         TeachCour.objects.create(course_id=course_object.id, teacher_id=course_object.author_id)
 
 
+
+
+
+
 @method_decorator(name='get', decorator=swagger_auto_schema(
-    operation_description="Указываем id_курса и смотрим инфо; по id_курсу выполняем RUD"))
+    operation_description="Указываем id_курса и смотрим инфо; по id_курсу выполняем RUD",
+operation_summary="ИНФО по курсу, на которые есть доступ. Указываем id курса"))
 class DetailCourse(generics.RetrieveUpdateDestroyAPIView):
     """ Detail могут смотреть студенты и профессора своего курса, владельцы вносить изменения """
 
@@ -58,7 +63,9 @@ class DetailCourse(generics.RetrieveUpdateDestroyAPIView):
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Добавление нового преподавателя к своему курсу"))
+    operation_description="Добавление нового преподавателя к своему курсу",
+    operation_summary="Добавляем профессора к курсу (может автор либо приглашенный)",
+))
 class AddTeacher(GenericAPIView):
     """ Добавляет профессора """
 
@@ -91,22 +98,24 @@ class AddTeacher(GenericAPIView):
 
 @method_decorator(name='put', decorator=swagger_auto_schema(
     operation_description="Удаление нового студента к своему курсу. "
-                          "метод DELETE не позволяет ввести доп.поле на удаление"))
+                          "метод DELETE не позволяет ввести доп.поле на удаление",
+    operation_summary="Автор курса удаляет студента с курса"))
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Добавление нового студента к своему курсу"))
+    operation_description="Добавление нового студента к своему курсу",
+    operation_summary="Добавляем студента к курсу"))
 class AddStudent(GenericAPIView):
     """ Добавляем/удаляем студента     """
 
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, IsProfessorOrReadOnly]
     serializer_class = AddStudentSerializer
 
-    def get(self, request, course_id):
-        try:
-            quer = Course.objects.get(id=course_id)
-            serializer = CourseSerializer(quer)
-            return Response(serializer.data)
-        except Course.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    # def get(self, request, course_id):
+    #     try:
+    #         quer = Course.objects.get(id=course_id)
+    #         serializer = CourseSerializer(quer)
+    #         return Response(serializer.data)
+    #     except Course.DoesNotExist:
+    #         return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, course_id):
         check = CheckCourse(course_id, request.data['student']).get_student(request.user.pk)
@@ -125,10 +134,11 @@ class AddStudent(GenericAPIView):
             )
 
     def put(self, request, course_id):
-        try:
-            student_pk = MyUser.objects.get(username=request.data['student']).pk
-            StudCour.objects.get(course_id=course_id, student_id=student_pk).delete()
-        except (MyUser.DoesNotExist, StudCour.DoesNotExist):
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if Course.objects.filter(author_id=request.user.pk, id=course_id):
+            try:
+                student_pk = MyUser.objects.get(username=request.data['student']).pk
+                StudCour.objects.get(course_id=course_id, student_id=student_pk).delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            except (MyUser.DoesNotExist, StudCour.DoesNotExist):
+                return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY)

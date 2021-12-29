@@ -14,6 +14,7 @@ class LectureSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'file_present', 'published_at', 'professor', 'name_course']
 
 
+
 class CourseLectureSerializer(serializers.ModelSerializer):
     lectures = LectureSerializer(many=True, read_only=True)
 

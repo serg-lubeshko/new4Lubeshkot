@@ -10,7 +10,7 @@ from course.serializers.serializers_solutions import SolutionSerializers, Homewo
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Студент отправляет ссылку на решения ро Д/з"))
+    operation_description="Студент отправляет ссылку на решения по Д/з"))
 @method_decorator(name='get', decorator=swagger_auto_schema(
     operation_description="Студент смотрит СВОИ домашние работы"))
 class SolutionToHomework(generics.GenericAPIView):
