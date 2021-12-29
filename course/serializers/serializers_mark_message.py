@@ -22,7 +22,6 @@ class MarkSerializer(serializers.ModelSerializer):
         self.fields["solution_id"] = serializers.ChoiceField(
             choices=[i.id for i in Solution.objects.all()])
 
-    # solution_id = serializers.ChoiceField(choices=[i.id for i in Solution.objects.all()])
     mark = serializers.IntegerField(min_value=0, max_value=10)
 
     class Meta:
@@ -34,16 +33,6 @@ class MarkSerializer(serializers.ModelSerializer):
         if Mark.objects.filter(solution_id=solution_id).count() > 0:
             raise serializers.ValidationError("Вы добавили оценку")
         return data
-
-
-# _______________________________________________________________________________________________
-# class SolutionForProfessorCheckSerializer(serializers.ModelSerializer):
-#     id_user = serializers.IntegerField(source='id', read_only=True)
-#     user_solution = SolutionSerializers(many=True)
-#
-#     class Meta:
-#         model = MyUser
-#         fields = ['id_user', 'username', 'user_solution', ]
 
 
 # _______________________________________________________________________________________________
@@ -132,7 +121,7 @@ class MessageStudentSerialezers(serializers.ModelSerializer):
 
 class ListMessageForProfessorSerialezers(serializers.ModelSerializer):
     message_solution_students = MessageStudentSerialezers(many=True)
-
+    mark_solution=MarkToProfessorSerializers()
     class Meta:
         model = Solution
         fields = ['id', 'solution_task', 'mark_solution', 'message_solution_students']

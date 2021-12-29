@@ -41,10 +41,6 @@ class CourseList(generics.ListCreateAPIView):
         TeachCour.objects.create(course_id=course_object.id, teacher_id=course_object.author_id)
 
 
-
-
-
-
 @method_decorator(name='get', decorator=swagger_auto_schema(
     operation_description="Указываем id_курса и смотрим инфо; по id_курсу выполняем RUD",
 operation_summary="ИНФО по курсу, на которые есть доступ. Указываем id курса"))
@@ -73,14 +69,6 @@ class AddTeacher(GenericAPIView):
 
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, IsProfessorOrReadOnly]
     serializer_class = AddTeacherSerializer
-
-    # def get(self, request, course_id):
-    #     try:
-    #         quer = Course.objects.get(id=course_id)
-    #         serializer = CourseDetailSerializer(quer)
-    #         return Response(serializer.data)
-    #     except Course.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, course_id):
         check = CheckCourse(course_id, request.data['teacher']).get_professor(request.user.pk)
@@ -111,14 +99,6 @@ class AddStudent(GenericAPIView):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, IsProfessorOrReadOnly]
     serializer_class = AddStudentSerializer
 
-    # def get(self, request, course_id):
-    #     try:
-    #         quer = Course.objects.get(id=course_id)
-    #         serializer = CourseSerializer(quer)
-    #         return Response(serializer.data)
-    #     except Course.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
-
     def post(self, request, course_id):
         check = CheckCourse(course_id, request.data['student']).get_student(request.user.pk)
         if check is None:
@@ -138,7 +118,6 @@ class AddStudent(GenericAPIView):
     def put(self, request, course_id):
         if Course.objects.filter(author_id=request.user.pk, id=course_id):
             try:
-                print('**********')
                 student_pk = MyUser.objects.get(username=request.data['student']).pk
                 StudCour.objects.get(course_id=course_id, student_id=student_pk).delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
