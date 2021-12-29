@@ -13,8 +13,9 @@ from course.serializers.serializers_lecture import CourseLectureSerializer, Lect
 
 MyUser = get_user_model()
 
-@method_decorator(name='list', decorator=swagger_auto_schema(
-    operation_description="Список лекций к курсу"))
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    operation_description="Список лекций к курсу",
+    operation_summary="Список курсов с лекциями"))
 class LectureList(generics.ListAPIView):
     """  Список курса с лекциями """
 
@@ -30,9 +31,11 @@ class LectureList(generics.ListAPIView):
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Добавляем лекцию к курсу."))
+    operation_description="Добавляем лекцию к курсу.",
+    operation_summary="Добавляем лекцию к курсу. Вводим id курса"))
 @method_decorator(name='get', decorator=swagger_auto_schema(
-    operation_description="Информация по курсу с лекциями. Вводим id курса"))
+    operation_description="Информация по курсу с лекциями. Вводим id курса",
+    operation_summary="Информация по курсу с лекциями. Вводим id курса"))
 class LectureToCourse(GenericAPIView):
     """ Лекции к курсу может добавить профессор."""
 
@@ -60,7 +63,8 @@ class LectureToCourse(GenericAPIView):
 @method_decorator(name='put', decorator=swagger_auto_schema(
     operation_description="Редактирование  лекции (только автор). Вводим id лекции. В API Django файл спокойно редактируется "))
 @method_decorator(name='get', decorator=swagger_auto_schema(
-    operation_description="Информация по лекции. Вводим id лекции"))
+    operation_description="Информация по лекции. Вводим id лекции",
+operation_summary="Информация по лекции. Вводим id лекции"))
 class LectureRUD(generics.RetrieveUpdateDestroyAPIView):
     """ Обновление, удаление лекции. Может только автор лекции. Вводим id лекции """
 

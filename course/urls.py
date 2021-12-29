@@ -5,12 +5,12 @@ from course.views.homework_view import HomeworkToLecture
 from course.views.lecture_view import LectureList, LectureRUD, LectureToCourse
 from course.views.mark_message_view import ListMessageForProfessor, ProfessorWatchHomework, ProfessorMarkDetail, \
     StudentLookHisSolution, StudentMessage
-from course.views.person_view import UserRegister, ListPerson
+from course.views.person_view import UserCreate, ListPerson
 from course.views.solution_view import SolutionToHomework
 
 urlpatterns = [
     # Для удобства Login и Logout использовал Джанговский
-    path('a-create-person/', UserRegister.as_view()),
+    path('a-create-person/', UserCreate.as_view()),
     path('a-list-person/', ListPerson.as_view()),
 
     path('b-course-watch-and-add/all', CourseList.as_view()),
@@ -32,6 +32,6 @@ urlpatterns = [
 
     path('g-student-look-check-solutions/', StudentLookHisSolution.as_view()),
 
-    path('student-write-message/', StudentMessage.as_view())
+    path('e-student-write-message/', StudentMessage.as_view())
 
 ]

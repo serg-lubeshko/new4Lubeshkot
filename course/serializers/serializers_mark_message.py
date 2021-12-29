@@ -37,13 +37,13 @@ class MarkSerializer(serializers.ModelSerializer):
 
 
 # _______________________________________________________________________________________________
-class SolutionForProfessorCheckSerializer(serializers.ModelSerializer):
-    id_user = serializers.IntegerField(source='id', read_only=True)
-    user_solution = SolutionSerializers(many=True)
-
-    class Meta:
-        model = MyUser
-        fields = ['id_user', 'username', 'user_solution', ]
+# class SolutionForProfessorCheckSerializer(serializers.ModelSerializer):
+#     id_user = serializers.IntegerField(source='id', read_only=True)
+#     user_solution = SolutionSerializers(many=True)
+#
+#     class Meta:
+#         model = MyUser
+#         fields = ['id_user', 'username', 'user_solution', ]
 
 
 # _______________________________________________________________________________________________

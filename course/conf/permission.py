@@ -58,7 +58,7 @@ class IsLecturerOrReadOnly(permissions.BasePermission):
 
 
 class IsStudentOrReadOnly(permissions.BasePermission):
-    message = "Только студент данного курса может добавить работу"
+    message = "Только студент данного курса может выполнять действия"
 
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:

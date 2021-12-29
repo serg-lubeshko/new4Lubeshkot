@@ -15,10 +15,13 @@ MyUser = get_user_model()
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Профессор ставит оценку, пишет комментарий"))
+    operation_description="Профессор ставит оценку, пишет комментарий",
+operation_summary="Профессор ставит оценку и пишет комментарий"))
 @method_decorator(name='get', decorator=swagger_auto_schema(
     operation_description="Профессор смотрит решения студентов. Разделил json на решения: "
-                          "проверенные и не проверенные им "))
+                          "проверенные и не проверенные им ",
+    operation_summary="Профессор смотрит решения студентов. Разделил на: проверенные и не проверенные им"
+))
 class ProfessorWatchHomework(generics.GenericAPIView):
     """ Профессор смотрит solution и ставит оценку, может написать комментарий"""
 
@@ -65,7 +68,9 @@ class ProfessorMarkDetail(generics.RetrieveUpdateAPIView):
 
 
 @method_decorator(name='get', decorator=swagger_auto_schema(
-    operation_description="Студент смотрит оценку и комментарии профессора"))
+    operation_description="Студент смотрит оценку и комментарии профессора",
+    operation_summary="Студент смотрит проверены/не проверены работы, смотрит оценку и комментарии профессора."
+))
 class StudentLookHisSolution(generics.GenericAPIView):
     """ Студент смотрит оценку и комментарии профессора"""
 
@@ -85,7 +90,9 @@ class StudentLookHisSolution(generics.GenericAPIView):
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Студент пишет комментарий к Solution"))
+    operation_description="Студент пишет комментарий к Solution",
+    operation_summary="Студент пишет комментарий к Solution. Указываем id Solution"
+))
 class StudentMessage(generics.GenericAPIView):
     permission_classes = [IsAuthenticated, IsStudentReadOnly]
     serializer_class = StudentMessageSerializers
@@ -103,8 +110,9 @@ class StudentMessage(generics.GenericAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@method_decorator(name='list', decorator=swagger_auto_schema(
-    operation_description="Проффесор смотрит сообщения студента к его Solution"))
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    operation_description="Проффесор смотрит сообщения студента к его Solution",
+    operation_summary="Проффесор смотрит сообщения студентов к его Solution"))
 class ListMessageForProfessor(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsProfessorOrReadOnlyMarkDetail]
     serializer_class = ListMessageForProfessorSerialezers

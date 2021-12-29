@@ -16,9 +16,11 @@ MyUser = get_user_model()
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Профессор добавляет курс"))
+    operation_description="Профессор добавляет курс",
+    operation_summary="Профессор добавляет курс"))
 @method_decorator(name='get', decorator=swagger_auto_schema(
-    operation_description="СВОИ курсы могут смотреть только приглашенные студенты/проффесора, авторы"))
+    operation_description="СВОИ курсы могут смотреть только приглашенные студенты/проффесора, авторы",
+    operation_summary="СВОИ курсы могут смотреть только приглашенные студенты/проффесора, авторы"))
 class CourseList(generics.ListCreateAPIView):
     """Список курсов для приглашенных и авторов(каждый свои курсы), а также добавление нового курса"""
 
@@ -136,6 +138,7 @@ class AddStudent(GenericAPIView):
     def put(self, request, course_id):
         if Course.objects.filter(author_id=request.user.pk, id=course_id):
             try:
+                print('**********')
                 student_pk = MyUser.objects.get(username=request.data['student']).pk
                 StudCour.objects.get(course_id=course_id, student_id=student_pk).delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)

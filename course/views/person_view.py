@@ -13,8 +13,9 @@ MyUser = get_user_model()
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Создание профессора/студента"))
-class UserRegister(CreateAPIView):
+    operation_description="Создание профессора/студента",
+    operation_summary="Создание профессора/студента"))
+class UserCreate(CreateAPIView):
     """ Регистрация пользователя """
 
     model = MyUser
@@ -45,8 +46,10 @@ class MyLoginView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-@method_decorator(name='list', decorator=swagger_auto_schema(
-    operation_description="Список пользователей"))
+@method_decorator(name='get', decorator=swagger_auto_schema(
+    operation_description="Список пользователей",
+    operation_summary="Список юзеров"
+))
 class ListPerson(ListAPIView):
     """ Вывод списка пользователей """
 

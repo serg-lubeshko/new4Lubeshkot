@@ -10,9 +10,11 @@ from course.serializers.serializers_homework import HomeworkSerializer, LectureF
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
-    operation_description="Добавление домашней работы к лекции"))
+    operation_description="Добавление домашней работы к лекции",
+    operation_summary="Добавление домашней работы к лекции"))
 @method_decorator(name='get', decorator=swagger_auto_schema(
-    operation_description="Список лекций и домашних работ"))
+    operation_description="Список лекций и домашних работ",
+    operation_summary="Список лекций и домашних работ"))
 class HomeworkToLecture(generics.GenericAPIView):
     permission_classes = [IsAuthenticated, IsLecturerOrReadOnly]
     serializer_class = HomeworkSerializer
